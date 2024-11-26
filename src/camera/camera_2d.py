@@ -59,11 +59,13 @@ class Camera2D:
 
 
     def world_to_screen(self, world_x, world_y, screen_x, screen_y):
-        normalized_x = self.normalize_coordinate(world_x - self.position.x, True) * zoom
-        normalized_y = self.normalize_coordinate(world_y - self.position.y, False) * zoom
+        normalized_x = self.normalize_coordinate(world_x - self.position.x, True) * self.zoom
+        normalized_y = self.normalize_coordinate(world_y - self.position.y, False) * self.zoom
 
         screen_x = int((normalized_x + 1.) * self.width * 0.5)
         screen_y = int((normalized_y + 1.) * self.height * 0.5)
+
+        return [screen_x, screen_y]
 
 
     def screen_to_world(self, screen_x, screen_y, world_x, world_y):
@@ -73,6 +75,7 @@ class Camera2D:
         normalized_x = self.denormalize_coordinate(normalized_x / self.zoom, True)
         normalized_y = self.denormalize_coordinate(normalized_y / self.zoom, False)
 
-
         world_x = normalized_x + self.position.x
         world_y = normalized_y + self.position.y
+
+        return [world_x, world_y]
