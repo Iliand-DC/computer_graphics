@@ -28,7 +28,7 @@ class Model2D:
 
 
     def add_curve(self, x1, y1, cx, cy, x2, y2, color):
-        self.shapes.appendI(Line2D(Point(x1, y1),
+        self.shapes.append(Line2D(Point(x1, y1),
                                    Point(x2, y2),
                                    color))
 
