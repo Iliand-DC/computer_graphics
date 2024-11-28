@@ -1,7 +1,7 @@
-SRC 		   	= src
-MAIN			= $(SRC)/main.py
-VENV			= .venv
-ACTIVATE_VENV 	= . .venv/bin/activate
+SRC = src
+MAIN = $(SRC)/main.py
+VENV = .venv
+ACTIVATE_VENV = . .venv/bin/activate
 
 all: create_venv
 	 $(ACTIVATE_VENV); python $(MAIN)
