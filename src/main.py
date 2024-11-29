@@ -7,8 +7,27 @@ from shape.axis import *
 from graphics.graphics import *
 
 
-from math import sin
+from math import sin, cos, sqrt, pi, exp, log
 
+
+class Function:
+
+    @staticmethod
+    def function(x):
+        """ lognormal distribution
+        """
+        NU = -1
+        SIGMA = 2
+        return 1 / (x * SIGMA * sqrt(2 * pi)) * exp(- ((log(x) - NU) ** 2) / 2 * SIGMA**2)
+
+    @staticmethod
+    def func2(x):
+        return x**2
+
+
+    @staticmethod
+    def func3(x):
+        return x**3
 
 
 class MainWindow:
@@ -28,21 +47,23 @@ class MainWindow:
         self.axis = Axis()
 
 
-        x = []
-        y = []
-        for i in range(-10, 11):
-            x.append(float(i/10))
-            y.append(self.function(float(i/10)))
+        self.create_x_array(1, 100)
+        self.y = self.get_y(Function.function)
 
 
-        self.graphics = Graphics(self.model, x, y, 0x0000ff)
-        self.graphics.create_graphic()
+        graphic1 = Graphics(self.model, self.x, self.y, 0x0000ff)
+        graphic1.create_graphic()
 
 
-    def draw_lines(self):
-        self.model.add_line(-1, -1, 1, 1, 0xff0000)
-        self.model.rotation = 0
-        self.redraw_window()
+        self.create_x_array(-100, 100)
+        self.y = self.get_y(Function.func2)
+        graphic2 = Graphics(self.model, self.x, self.y, 0xff0000)
+        graphic2.create_graphic()
+
+
+        self.y = self.get_y(Function.func3)
+        graphic3 = Graphics(self.model, self.x, self.y, 0x00ff00)
+        graphic3.create_graphic()
 
 
     def redraw_window(self):
@@ -54,8 +75,16 @@ class MainWindow:
         SDL_UpdateWindowSurface(self.window, self.surface)
 
 
-    def function(self, x):
-        return x**2
+    def create_x_array(self, start, stop):
+        self.x = [float(i/100) for i in range(start, stop + 1)]
+
+
+    def get_y(self, function):
+        result = []
+        for i in self.x:
+            result.append(-function(i))
+
+        return result
 
 
 
@@ -64,14 +93,10 @@ class Application:
         try:
             sdl2.ext.init()
 
-
-            # window = sdl2.ext.Window("Computer Graphics", size = (640, 480))
-            # window.show()
-
             event = SDL_Event()
 
             main = MainWindow()
-            main.draw_lines()
+            main.redraw_window()
 
             mouse_dragging = False
 
@@ -97,8 +122,23 @@ class Application:
                         last_mouse_x = event.motion.x
                         last_mouse_y = event.motion.y
 
+
                     elif event.type == SDL_QUIT:
                         sys.exit(0)
+
+
+                    elif event.type == SDL_MOUSEWHEEL:
+                        zoom = 1.1 if event.wheel.y > 0 else 0.9
+                        main.camera.zoom = main.camera.zoom * zoom
+
+
+                    elif event.type == SDL_KEYDOWN:
+                        if event.key.keysym.sym == SDLK_q:
+                            main.model.rotate(5)
+
+                        elif event.key.keysym.sym == SDLK_r:
+                            main.model.rotate(-5)
+
 
                     main.redraw_window()
 

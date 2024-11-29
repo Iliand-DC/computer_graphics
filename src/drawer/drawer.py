@@ -16,9 +16,6 @@ class Drawer:
         sx1, sy1 = camera.world_to_screen(x1, y1, sx1, sy1)
         sx2, sy2 = camera.world_to_screen(x2, y2, sx2, sy2)
 
-        # print(f"{sx2} - {sx1}")
-        # print(f"{sy2} - {sy1}")
-
         dx = sx2 - sx1
         dy = sy2 - sy1
 
